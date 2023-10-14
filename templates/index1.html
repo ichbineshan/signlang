@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>SignLang</title>
+    <link rel="stylesheet" href="static/fontawesome-5.5/css/all.min.css" />
+    <link rel="stylesheet" href="static/bootstrap.min.css" />
+    <link rel="stylesheet" href="static/templatemo-style.css" />
+  </head>
+  <style>
+    #main {
+      background-image: url("static/images/bg.jpg");
+      background-repeat: no-repeat;
+      height: 100vh;
+      min-height: 375px;
+      position: relative;
+    }
+    /* background-image: url("static/images/bg.jpg"); */
+  </style>
+
+  <body> 
+    <!-- main section -->
+    <section id="main" class="text-white tm-font-big tm-parallax">
+      <nav class="navbar navbar-expand-md tm-navbar" id="tmNav">              
+        <div class="container">   
+          <div class="tm-next">
+              <a href="#main" class="navbar-brand">SignLang</a>
+          </div>             
+        </div>
+      </nav>
+      
+      <div class="text-center tm-main-text-container">
+        <div class="tm-main-text-container-inner">
+          <!-- video part -->
+          <img width="450" height="200" src="{{ url_for('video') }}" class="img-fluid mx-auto d-block" alt="Sign Language Translator">  
+          <!-- <iframe width="800" height="450" src="https://www.youtube.com/embed/qcdivQfA41Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+        </div>        
+      </div>
+
+      <div class="tm-next tm-signs-next">
+        <a href="#signs" class="text-center tm-down-arrow-link">
+          <i class="fas fa-3x fa-caret-down tm-down-arrow"></i>
+        </a>
+      </div>      
+    </section>
+
+    <section id="signs" class="tm-section-pad-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <img src="static/images/signs.jpg" alt="Image" class="img-fluid tm-signs-img" />
+          </div>
+          <div class="col-lg-6">
+            <div class="tm-intro-text-container">
+                <h2 class="tm-text-dark mb-4 tm-section-title">American Sign Language (ASL)</h2>
+                <p class="mb-4 tm-intro-text">
+                  Here is a reference for you regarding the sign language symbols.
+              </p>
+              <p class="mb-5 tm-intro-text">
+                American Sign Language (ASL) is a popular sign language. It is the primary sign language used by the deaf and people with hearing impairment in the USA and Canada.
+            </div>
+          </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="tm-section-pad-top tm-parallax-2"></section>
+    <script src="static/jquery-1.9.1.min.js"></script>     
+    
+    <script src="static/jquery.singlePageNav.min.js"></script>  
+    <script>
+
+      function getOffSet(){
+        var _offset = 450;
+        var windowHeight = window.innerHeight;
+
+        if(windowHeight > 500) {
+          _offset = 400;
+        } 
+        if(windowHeight > 680) {
+          _offset = 300
+        }
+        if(windowHeight > 830) {
+          _offset = 210;
+        }
+
+        return _offset;
+      }
+
+      function setParallaxPosition($doc, multiplier, $object){
+        var offset = getOffSet();
+        var from_top = $doc.scrollTop(),
+          bg_css = 'center ' +(multiplier * from_top - offset) + 'px';
+        $object.css({"background-position" : bg_css });
+      }
+
+      // Parallax function      
+      var background_image_parallax = function($object, multiplier, forceSet){
+        multiplier = typeof multiplier !== 'undefined' ? multiplier : 0.5;
+        multiplier = 1 - multiplier;
+        var $doc = $(document);
+        // $object.css({"background-attatchment" : "fixed"});
+
+        if(forceSet) {
+          setParallaxPosition($doc, multiplier, $object);
+        } else {
+          $(window).scroll(function(){          
+            setParallaxPosition($doc, multiplier, $object);
+          });
+        }
+      };
+
+      var background_image_parallax_2 = function($object, multiplier){
+        multiplier = typeof multiplier !== 'undefined' ? multiplier : 0.5;
+        multiplier = 1 - multiplier;
+        var $doc = $(document);
+        $object.css({"background-attachment" : "fixed"});
+        $(window).scroll(function(){
+          var firstTop = $object.offset().top,
+              pos = $(window).scrollTop(),
+              yPos = Math.round((multiplier * (firstTop - pos)) - 186);              
+
+          var bg_css = 'center ' + yPos + 'px';
+
+          $object.css({"background-position" : bg_css });
+        });
+      };
+      
+      $(function(){
+        // main Section - Background Parallax
+        background_image_parallax($(".tm-parallax"), 0.30, false);
+        background_image_parallax_2($("#contact"), 0.80);   
+        
+        // Handle window resize
+        window.addEventListener('resize', function(){
+          background_image_parallax($(".tm-parallax"), 0.30, true);
+        }, true);
+
+        // Detect window scroll and update navbar
+        $(window).scroll(function(e){          
+          if($(document).scrollTop() > 120) {
+            $('.tm-navbar').addClass("scroll");
+          } else {
+            $('.tm-navbar').removeClass("scroll");
+          }
+        });
+        
+        // Close mobile menu after click 
+        $('#tmNav a').on('click', function(){
+          $('.navbar-collapse').removeClass('show'); 
+        })
+
+        // Scroll to corresponding section with animation
+        $('#tmNav').singlePageNav();        
+        
+        // Add smooth scrolling to all links
+        // https://www.w3schools.com/howto/howto_css_smooth_scroll.asp
+        $("a").on('click', function(event) {
+          if (this.hash !== "") {
+            event.preventDefault();
+            var hash = this.hash;
+
+            $('html, body').animate({
+              scrollTop: $(hash).offset().top
+            }, 400, function(){
+              window.location.hash = hash;
+            });
+          } // End if
+        });
+      });
+    </script>
+  </body>
+</html>
